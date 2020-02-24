@@ -26,7 +26,7 @@ var spotify = new Spotify(keys.spotify);
 // =====================================
 
 // Writes to the log.txt file
-var writeToLog = function(data) {
+var writeToLog = function (data) {
 
   /** FIXME: BONUS
    * 
@@ -37,40 +37,44 @@ var writeToLog = function(data) {
       Make sure you append each command you run to the log.txt file.
 
       Do not overwrite your file each time you run a command.
-    */ 
+    */
 
-    // Append the JSON data and add a newline character to the end of the log.txt file
+  // Append the JSON data and add a newline character to the end of the log.txt file
 
 };
 
 // Helper function that gets the artist name
-var getArtistNames = function(artist) {
-
-  var artist = process.argv[3];
-
-  var queryURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
-
-  axios.get(queryURL).then(function(response) {
-
-    var venueName = response.data[0].venue.name;
-    var loc = response.data[0].venue.city + ", " + response.data[0].venue.country;
-    var uglyDate = response.data[0].datetime;
-
-    var prettyDate = moment(uglyDate).format("MM/DD/YYYY");
-
-    console.log(venueName);
-    console.log(loc);
-    console.log(prettyDate);
-  });
-
+var getArtistNames = function (artist) {
+  return artist.name
 };
-// console.log(getArtistNames());
 
 // Function for running a Spotify search
-var getMeSpotify = function(songName) {
+var getMeSpotify = function (songName) {
+
+  var songName = process.argv[3];
+
   if (songName === undefined) {
     songName = "The Sign";
   }
+  spotify
+    .search({
+      type: 'track',
+      query: songName
+    })
+    .then(function (response) {
+
+      console.log(response.tracks.items[0].artists[0].name);
+      console.log(response.tracks.items[0].name);
+      console.log(response.tracks.items[0].external_urls.spotify);
+      console.log(response.tracks.items[0].album.name);
+      
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+
+
+
 
   /** TODO: Write the code to execute the command below. 
    * 
@@ -94,66 +98,86 @@ var getMeSpotify = function(songName) {
     * The Spotify API requires you sign up as a developer to generate the necessary credentials. You can follow these steps in order to generate a client id and client secret:
 
   */
-  spotify.search();
 };
+console.log(getMeSpotify());
 
 // Function for concert search
-var getMyBands = function(artist) {
 
-  /** TODO: Write the code to exceute the command below. 
-   * 
-   *        node liri.js concert-this <artist/band name here>
-   * 
-   * This will search the Bands in Town Artist Events API
-        1. Name of the venue
-        2. Venue location
-        3. Date of the Event (use moment to format this as "MM/DD/YYYY")
-      Important: There is no need to sign up for a Bands in Town api_id key. Use the codingbootcamp as your app_id. 
-   * 
-  */
- //FIXME: 
-  var queryURL = "CREATE-THE-URL-HERE";
+// var getMyBands = function (artist) {
 
-  axios.get(queryURL).then(
+//   var artist = process.argv[3];
 
-    
-    function(response){
-      var jsonData = response.data;
+//   var queryURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
 
-      if (!jsonData.length) {
-        console.log("No results found for " + artist);
-        return;
-      }
+//   axios.get(queryURL).then(function (response) {
 
-      var logData = [];
+//     var venueName = response.data[0].venue.name;
+//     var loc = response.data[0].venue.city + ", " + response.data[0].venue.country;
+//     var uglyDate = response.data[0].datetime;
 
-      logData.push("Upcoming concerts for " + artist + ":");
+//     var prettyDate = moment(uglyDate).format("MM/DD/YYYY");
 
-      //FIXME: Finish the code below
+//     console.log(venueName);
+//     console.log(loc);
+//     console.log(prettyDate);
+//   });
 
-    }
-  );
-};
+/** TODO: Write the code to exceute the command below. 
+ * 
+ *        node liri.js concert-this <artist/band name here>
+ * 
+ * This will search the Bands in Town Artist Events API
+      1. Name of the venue
+      2. Venue location
+      3. Date of the Event (use moment to format this as "MM/DD/YYYY")
+    Important: There is no need to sign up for a Bands in Town api_id key. Use the codingbootcamp as your app_id. 
+ * 
+*/
+//FIXME: 
+//   var queryURL = "CREATE-THE-URL-HERE";
 
-  /** TODO: Write the code to exceute the command below. 
-   * 
-   *        node liri.js movie-this '<movie name here>'
-   * 
-   *   This will output the following information to your terminal/bash window:
-   * 
-        1. Title of the movie.
-        2. Year the movie came out.
-        3. IMDB Rating of the movie.
-        3. Rotten Tomatoes Rating of the movie.
-        4. Country where the movie was produced.
-        5. Language of the movie.
-        6. Plot of the movie.
-        7. Actors in the movie.
+//   axios.get(queryURL).then(
 
-      If the user doesn't type a movie in, the program will output data for the movie 'Mr. Nobody.' 
-  */
+
+//     function (response) {
+//       var jsonData = response.data;
+
+//       if (!jsonData.length) {
+//         console.log("No results found for " + artist);
+//         return;
+//       }
+
+//       var logData = [];
+
+//       logData.push("Upcoming concerts for " + artist + ":");
+
+//       //FIXME: Finish the code below
+
+//     }
+//   );
+// };
+
+// console.log(getMyBands());
+
+/** TODO: Write the code to exceute the command below. 
+ * 
+ *        node liri.js movie-this '<movie name here>'
+ * 
+ *   This will output the following information to your terminal/bash window:
+ * 
+      1. Title of the movie.
+      2. Year the movie came out.
+      3. IMDB Rating of the movie.
+      3. Rotten Tomatoes Rating of the movie.
+      4. Country where the movie was produced.
+      5. Language of the movie.
+      6. Plot of the movie.
+      7. Actors in the movie.
+
+    If the user doesn't type a movie in, the program will output data for the movie 'Mr. Nobody.' 
+*/
 // Function for running a Movie Search
-var getMeMovie = function(movieName) {
+var getMeMovie = function (movieName) {
   if (movieName === undefined) {
     movieName = "Mr Nobody";
   }
@@ -162,7 +186,7 @@ var getMeMovie = function(movieName) {
   var urlHit = "CREATE-THE-URL-HERE";
 
   axios.get(urlHit).then(
-    function(response) {
+    function (response) {
       var jsonData = response.data;
 
       //FIXME: Finish the code below
@@ -171,31 +195,30 @@ var getMeMovie = function(movieName) {
 };
 
 // Function for running a command based on text file
-var doWhatItSays = function() {
-  fs.readFile("random.txt", "utf8", function(error, data) {
+var doWhatItSays = function () {
+  fs.readFile("random.txt", "utf8", function (error, data) {
     console.log(data);
 
     var dataArr = data.split(",");
 
     if (dataArr.length === 2) {
       pick(dataArr[0], dataArr[1]);
-    }
-    else if (dataArr.length === 1) {
+    } else if (dataArr.length === 1) {
       pick(dataArr[0]);
     }
   });
 };
 
 // Function for determining which command is executed
-var pick = function(command, commandData) {
-      //TODO:  Write your code below
-      // This will be the main function to control which method to call. See function "runThis" is calling this pick method
+var pick = function (command, commandData) {
+  //TODO:  Write your code below
+  // This will be the main function to control which method to call. See function "runThis" is calling this pick method
 
- 
+
 };
 
 // Function which takes in command line arguments and executes correct function accordingly
-var runThis = function(argOne, argTwo) {
+var runThis = function (argOne, argTwo) {
   pick(argOne, argTwo);
 };
 
