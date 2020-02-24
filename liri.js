@@ -45,16 +45,34 @@ var writeToLog = function(data) {
 
 // Helper function that gets the artist name
 var getArtistNames = function(artist) {
-  return artist.name;
+
+  var artist = process.argv[3];
+
+  var queryURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
+
+  axios.get(queryURL).then(function(response) {
+
+    var venueName = response.data[0].venue.name;
+    var loc = response.data[0].venue.city + ", " + response.data[0].venue.country;
+    var uglyDate = response.data[0].datetime;
+
+    var prettyDate = moment(uglyDate).format("MM/DD/YYYY");
+
+    console.log(venueName);
+    console.log(loc);
+    console.log(prettyDate);
+  });
+
 };
+// console.log(getArtistNames());
 
 // Function for running a Spotify search
 var getMeSpotify = function(songName) {
   if (songName === undefined) {
-    songName = "What's my age again";
+    songName = "The Sign";
   }
 
-  /** TODO: Write the code to exceute the command below. 
+  /** TODO: Write the code to execute the command below. 
    * 
    *      node liri.js spotify-this-song '<song name here>'
    * 
