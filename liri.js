@@ -22,6 +22,7 @@ var fs = require("fs");
 // Initialize the spotify API client using our client id and secret
 var spotify = new Spotify(keys.spotify);
 
+
 // FUNCTIONS
 // =====================================
 
@@ -67,14 +68,11 @@ var getMeSpotify = function (songName) {
       console.log(response.tracks.items[0].name);
       console.log(response.tracks.items[0].external_urls.spotify);
       console.log(response.tracks.items[0].album.name);
-      
+
     })
     .catch(function (err) {
       console.log(err);
     });
-
-
-
 
   /** TODO: Write the code to execute the command below. 
    * 
@@ -99,65 +97,69 @@ var getMeSpotify = function (songName) {
 
   */
 };
-console.log(getMeSpotify());
 
 // Function for concert search
 
-// var getMyBands = function (artist) {
+var getMyBands = function (artist) {
 
-//   var artist = process.argv[3];
+  var artist = process.argv[3];
 
-//   var queryURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
+  var queryURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
 
-//   axios.get(queryURL).then(function (response) {
+  axios.get(queryURL).then(function (response) {
 
-//     var venueName = response.data[0].venue.name;
-//     var loc = response.data[0].venue.city + ", " + response.data[0].venue.country;
-//     var uglyDate = response.data[0].datetime;
+    var jsonData = response.data;
 
-//     var prettyDate = moment(uglyDate).format("MM/DD/YYYY");
+    if (!jsonData.length) {
+      console.log("No results found for " + artist);
+      return;
+    }
 
-//     console.log(venueName);
-//     console.log(loc);
-//     console.log(prettyDate);
-//   });
+    var venueName = jsonData[0].venue.name;
+    var loc = jsonData[0].venue.city + ", " + jsonData[0].venue.country;
+    var uglyDate = jsonData[0].datetime;
 
-/** TODO: Write the code to exceute the command below. 
- * 
- *        node liri.js concert-this <artist/band name here>
- * 
- * This will search the Bands in Town Artist Events API
-      1. Name of the venue
-      2. Venue location
-      3. Date of the Event (use moment to format this as "MM/DD/YYYY")
-    Important: There is no need to sign up for a Bands in Town api_id key. Use the codingbootcamp as your app_id. 
- * 
-*/
-//FIXME: 
-//   var queryURL = "CREATE-THE-URL-HERE";
+    var prettyDate = moment(uglyDate).format("MM/DD/YYYY");
 
-//   axios.get(queryURL).then(
+    console.log(venueName);
+    console.log(loc);
+    console.log(prettyDate);
+  });
+
+  /** TODO: Write the code to execute the command below. 
+   * 
+   *        node liri.js concert-this <artist/band name here>
+   * 
+   * This will search the Bands in Town Artist Events API
+        1. Name of the venue
+        2. Venue location
+        3. Date of the Event (use moment to format this as "MM/DD/YYYY")
+      Important: There is no need to sign up for a Bands in Town api_id key. Use the codingbootcamp as your app_id. 
+   * 
+  */
+  //FIXME: 
+  // var queryURL = "CREATE-THE-URL-HERE";
+
+  // axios.get(queryURL).then(
 
 
-//     function (response) {
-//       var jsonData = response.data;
+  //   function (response) {
+  //     var jsonData = response.data;
 
-//       if (!jsonData.length) {
-//         console.log("No results found for " + artist);
-//         return;
-//       }
+  //     if (!jsonData.length) {
+  //       console.log("No results found for " + artist);
+  //       return;
+  //     }
 
-//       var logData = [];
+  //     var logData = [];
 
-//       logData.push("Upcoming concerts for " + artist + ":");
+  //     logData.push("Upcoming concerts for " + artist + ":");
 
-//       //FIXME: Finish the code below
+  //     //FIXME: Finish the code below
 
-//     }
-//   );
-// };
-
-// console.log(getMyBands());
+  //   }
+  // );
+};
 
 /** TODO: Write the code to exceute the command below. 
  * 
@@ -182,14 +184,27 @@ var getMeMovie = function (movieName) {
     movieName = "Mr Nobody";
   }
 
+
+  var movieName = process.argv[3];
+
   //FIXME: 
-  var urlHit = "CREATE-THE-URL-HERE";
+  var urlHit = "http://www.omdbapi.com/?t=" + movieName + "&apikey=trilogy";
 
   axios.get(urlHit).then(
     function (response) {
+
       var jsonData = response.data;
 
-      //FIXME: Finish the code below
+      console.log("##########################################################################################");
+      console.log("Title: " + jsonData.Title);
+      console.log("Year: " + jsonData.Year);
+      console.log("IMDB Rating: " + jsonData.Ratings[0].Value);
+      console.log("Rotten Tomatoes Rating: " + jsonData.Ratings[1].Value);
+      console.log("Country: " + jsonData.Country);
+      console.log("Language: " + jsonData.Language);
+      console.log("Plot: " + jsonData.Plot);
+      console.log("Actors: " + jsonData.Actors);
+      console.log("##########################################################################################");
     }
   );
 };
@@ -206,19 +221,24 @@ var doWhatItSays = function () {
     } else if (dataArr.length === 1) {
       pick(dataArr[0]);
     }
+
+    if (error) {
+      return console.log(error);
+    }
   });
 };
-
+console.log(doWhatItSays());
 // Function for determining which command is executed
 var pick = function (command, commandData) {
   //TODO:  Write your code below
   // This will be the main function to control which method to call. See function "runThis" is calling this pick method
-
+  
 
 };
 
 // Function which takes in command line arguments and executes correct function accordingly
 var runThis = function (argOne, argTwo) {
+
   pick(argOne, argTwo);
 };
 
