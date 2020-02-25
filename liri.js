@@ -44,19 +44,14 @@ var writeToLog = function (data) {
 
 };
 
-// Helper function that gets the artist name
-var getArtistNames = function (artist) {
-  return artist.name
-};
-
 // Function for running a Spotify search
+
 var getMeSpotify = function (songName) {
 
-  var songName = process.argv[3];
-
-  if (songName === undefined) {
+  if (songName === "") {
     songName = "The Sign";
-  }
+  };
+
   spotify
     .search({
       type: 'track',
@@ -64,130 +59,61 @@ var getMeSpotify = function (songName) {
     })
     .then(function (response) {
 
-      console.log(response.tracks.items[0].artists[0].name);
-      console.log(response.tracks.items[0].name);
-      console.log(response.tracks.items[0].external_urls.spotify);
-      console.log(response.tracks.items[0].album.name);
+      console.log("##########################################################################################");
+      console.log("Artist: " + response.tracks.items[0].artists[0].name);
+      console.log("Track name: " + response.tracks.items[0].name);
+      console.log("Track link: " + response.tracks.items[0].external_urls.spotify);
+      console.log("Album name: " + response.tracks.items[0].album.name);
+      console.log("##########################################################################################");
 
     })
     .catch(function (err) {
-      console.log(err);
+      console.log("Could not find that song");
     });
-
-  /** TODO: Write the code to execute the command below. 
-   * 
-   *      node liri.js spotify-this-song '<song name here>'
-   * 
-
-    * This will show the following information about the song in your terminal/bash window
-
-        1. Artist(s)
-
-        2. The song's name
-
-        3. A preview link of the song from Spotify
-
-        4. The album that the song is from
-
-    * If no song is provided then your program will default to "The Sign" by Ace of Base.
-
-    * You will utilize the node-spotify-api package in order to retrieve song information from the Spotify API.
-
-    * The Spotify API requires you sign up as a developer to generate the necessary credentials. You can follow these steps in order to generate a client id and client secret:
-
-  */
 };
 
 // Function for concert search
 
 var getMyBands = function (artist) {
 
-  var artist = process.argv[3];
-
   var queryURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
 
   axios.get(queryURL).then(function (response) {
 
     var jsonData = response.data;
+    if (jsonData.length) {
+      var venueName = jsonData[0].venue.name;
+      var loc = jsonData[0].venue.city + ", " + jsonData[0].venue.country;
+      var uglyDate = jsonData[0].datetime;
 
-    if (!jsonData.length) {
-      console.log("No results found for " + artist);
-      return;
-    }
+      var prettyDate = moment(uglyDate).format("MM/DD/YYYY");
 
-    var venueName = jsonData[0].venue.name;
-    var loc = jsonData[0].venue.city + ", " + jsonData[0].venue.country;
-    var uglyDate = jsonData[0].datetime;
+      var logData = [];
 
-    var prettyDate = moment(uglyDate).format("MM/DD/YYYY");
+      logData.push("Upcoming concerts for " + artist + ":");
+      logData.push("Venue: " + venueName);
+      logData.push("Location: " + loc);
+      logData.push("Date " + prettyDate);
 
-    console.log(venueName);
-    console.log(loc);
-    console.log(prettyDate);
+      console.log("##########################################################################################");
+      console.log(logData);
+      console.log("##########################################################################################");
+    } else {
+      console.log("Could not find that artist")
+    };
+
+  }).catch(function (err) {
+    console.log("Could not find that artist");
   });
-
-  /** TODO: Write the code to execute the command below. 
-   * 
-   *        node liri.js concert-this <artist/band name here>
-   * 
-   * This will search the Bands in Town Artist Events API
-        1. Name of the venue
-        2. Venue location
-        3. Date of the Event (use moment to format this as "MM/DD/YYYY")
-      Important: There is no need to sign up for a Bands in Town api_id key. Use the codingbootcamp as your app_id. 
-   * 
-  */
-  //FIXME: 
-  // var queryURL = "CREATE-THE-URL-HERE";
-
-  // axios.get(queryURL).then(
-
-
-  //   function (response) {
-  //     var jsonData = response.data;
-
-  //     if (!jsonData.length) {
-  //       console.log("No results found for " + artist);
-  //       return;
-  //     }
-
-  //     var logData = [];
-
-  //     logData.push("Upcoming concerts for " + artist + ":");
-
-  //     //FIXME: Finish the code below
-
-  //   }
-  // );
 };
 
-/** TODO: Write the code to exceute the command below. 
- * 
- *        node liri.js movie-this '<movie name here>'
- * 
- *   This will output the following information to your terminal/bash window:
- * 
-      1. Title of the movie.
-      2. Year the movie came out.
-      3. IMDB Rating of the movie.
-      3. Rotten Tomatoes Rating of the movie.
-      4. Country where the movie was produced.
-      5. Language of the movie.
-      6. Plot of the movie.
-      7. Actors in the movie.
-
-    If the user doesn't type a movie in, the program will output data for the movie 'Mr. Nobody.' 
-*/
 // Function for running a Movie Search
+
 var getMeMovie = function (movieName) {
-  if (movieName === undefined) {
+  if (movieName === "") {
     movieName = "Mr Nobody";
-  }
+  };
 
-
-  var movieName = process.argv[3];
-
-  //FIXME: 
   var urlHit = "http://www.omdbapi.com/?t=" + movieName + "&apikey=trilogy";
 
   axios.get(urlHit).then(
@@ -195,29 +121,33 @@ var getMeMovie = function (movieName) {
 
       var jsonData = response.data;
 
-      console.log("##########################################################################################");
-      console.log("Title: " + jsonData.Title);
-      console.log("Year: " + jsonData.Year);
-      console.log("IMDB Rating: " + jsonData.Ratings[0].Value);
-      console.log("Rotten Tomatoes Rating: " + jsonData.Ratings[1].Value);
-      console.log("Country: " + jsonData.Country);
-      console.log("Language: " + jsonData.Language);
-      console.log("Plot: " + jsonData.Plot);
-      console.log("Actors: " + jsonData.Actors);
-      console.log("##########################################################################################");
+      if (jsonData.Response === 'True') {
+        console.log("##########################################################################################");
+        console.log("Title: " + jsonData.Title);
+        console.log("Year: " + jsonData.Year);
+        console.log("IMDB Rating: " + jsonData.Ratings[0].Value);
+        console.log("Rotten Tomatoes Rating: " + jsonData.Ratings[1].Value);
+        console.log("Country: " + jsonData.Country);
+        console.log("Language: " + jsonData.Language);
+        console.log("Plot: " + jsonData.Plot);
+        console.log("Actors: " + jsonData.Actors);
+        console.log("##########################################################################################");
+      } else {
+        console.log(jsonData.Error)
+      }
     }
   );
 };
 
 // Function for running a command based on text file
+
 var doWhatItSays = function () {
   fs.readFile("random.txt", "utf8", function (error, data) {
     console.log(data);
 
     var dataArr = data.split(",");
-
     if (dataArr.length === 2) {
-      pick(dataArr[0], dataArr[1]);
+      pick(dataArr[0], dataArr[1].replace(/"/g, ''));
     } else if (dataArr.length === 1) {
       pick(dataArr[0]);
     }
@@ -229,8 +159,8 @@ var doWhatItSays = function () {
 };
 
 // Function for determining which command is executed
+
 var pick = function (command, commandData) {
-  //TODO:  Write your code below
   // This will be the main function to control which method to call. See function "runThis" is calling this pick method
   switch (command) {
     case 'spotify-this-song':
@@ -245,14 +175,13 @@ var pick = function (command, commandData) {
     case 'do-what-it-says':
       doWhatItSays();
       break;
-    default: console.log("This ain't it, Chief.");
+    default:
+      console.log("GIVE ME SOMETHING TO WORK WITH!");
   };
-
 };
-
 // Function which takes in command line arguments and executes correct function accordingly
-var runThis = function (argOne, argTwo) {
 
+var runThis = function (argOne, argTwo) {
   pick(argOne, argTwo);
 };
 
