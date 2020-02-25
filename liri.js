@@ -227,12 +227,26 @@ var doWhatItSays = function () {
     }
   });
 };
-console.log(doWhatItSays());
+
 // Function for determining which command is executed
 var pick = function (command, commandData) {
   //TODO:  Write your code below
   // This will be the main function to control which method to call. See function "runThis" is calling this pick method
-  
+  switch (command) {
+    case 'spotify-this-song':
+      getMeSpotify(commandData);
+      break;
+    case 'concert-this':
+      getMyBands(commandData);
+      break;
+    case 'movie-this':
+      getMeMovie(commandData);
+      break;
+    case 'do-what-it-says':
+      doWhatItSays();
+      break;
+    default: console.log("This ain't it, Chief.");
+  };
 
 };
 
