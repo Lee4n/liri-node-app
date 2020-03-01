@@ -82,22 +82,26 @@ var getMyBands = function (artist) {
 
     var jsonData = response.data;
     if (jsonData.length && artist !== undefined) {
-      var venueName = jsonData[0].venue.name;
-      var loc = jsonData[0].venue.city + ", " + jsonData[0].venue.country;
-      var uglyDate = jsonData[0].datetime;
 
-      var prettyDate = moment(uglyDate).format("MM/DD/YYYY");
+      for (var i = 0; i < 5; i++) {
+        var venueName = jsonData[i].venue.name;
+        var loc = jsonData[i].venue.city + ", " + jsonData[i].venue.country;
+        var uglyDate = jsonData[i].datetime;
 
-      var logData = [];
+        var prettyDate = moment(uglyDate).format("MM/DD/YYYY");
 
-      logData.push("Upcoming concerts for " + artist + ":");
-      logData.push("Venue: " + venueName);
-      logData.push("Location: " + loc);
-      logData.push("Date " + prettyDate);
+        var logData = [];
 
-      console.log("##########################################################################################");
-      console.log(logData);
-      console.log("##########################################################################################");
+        logData.push("Upcoming concerts for " + artist + ":");
+        logData.push("Venue: " + venueName);
+        logData.push("Location: " + loc);
+        logData.push("Date " + prettyDate);
+
+        console.log("##########################################################################################");
+        console.log(logData);
+        console.log("##########################################################################################");
+      }
+
     } else {
       console.log("Could not find that artist")
     };
