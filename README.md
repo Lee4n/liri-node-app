@@ -10,7 +10,7 @@
 
     node liri.js movie-this "Just Married"
 
-LIRI responds to 4 seperate commands:
+LIRI responds to 4 separate commands:
 
 [concert-this]
 
