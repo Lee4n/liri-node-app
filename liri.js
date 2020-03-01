@@ -81,7 +81,7 @@ var getMyBands = function (artist) {
   axios.get(queryURL).then(function (response) {
 
     var jsonData = response.data;
-    if (jsonData.length) {
+    if (jsonData.length && artist !== undefined) {
       var venueName = jsonData[0].venue.name;
       var loc = jsonData[0].venue.city + ", " + jsonData[0].venue.country;
       var uglyDate = jsonData[0].datetime;
@@ -122,6 +122,7 @@ var getMeMovie = function (movieName) {
       var jsonData = response.data;
 
       if (jsonData.Response === 'True') {
+        console.log(jsonData.Response)
         console.log("##########################################################################################");
         console.log("Title: " + jsonData.Title);
         console.log("Year: " + jsonData.Year);
@@ -139,7 +140,7 @@ var getMeMovie = function (movieName) {
   );
 };
 
-// Function for running a command based on text file
+// Function for running a command based on text file 
 
 var doWhatItSays = function () {
   fs.readFile("random.txt", "utf8", function (error, data) {
